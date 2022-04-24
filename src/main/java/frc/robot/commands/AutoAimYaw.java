@@ -4,12 +4,21 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Limelight;
 
-public class SwerveDriveCommand extends CommandBase {
-  /** Creates a new SwerveDriveCommand. */
-  public SwerveDriveCommand() {
+public class AutoAimYaw extends CommandBase {
+  /** Creates a new AutoAimYaw. */
+  private Limelight limelight;
+  private PIDController turnController;
+
+  public AutoAimYaw() {
     // Use addRequirements() here to declare subsystem dependencies.
+    limelight = RobotContainer.limelight;
+    turnController = new PIDController(1.5, 0, 0.8);
+
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +27,11 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (limelight.getXCrosshairOffset() > 1) {
+      RobotContainer.swerveDrive.periodicModuleUpdate(0, 0, turnController.calculate(0,0));
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

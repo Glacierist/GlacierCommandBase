@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.SPI;
 
 public class SwerveDrivetrain extends SubsystemBase {
@@ -32,28 +33,24 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   private AHRS gyro;
 
-  /* Changeable Parameters */ 
-  private double driveSpeedMultiplier = 4;
-  private double radiansPerSecondMultiplier = 6;
-
-  public SwerveDrivetrain(double originDistanceX, double originDistanceY) {
+  public SwerveDrivetrain() {
     // Use addRequirements() here to declare subsystem dependencies.
     
     /* Let the code know where the modules are in relation to the origin of the robot */
-    frontLeftModuleLocation = new Translation2d(originDistanceX, originDistanceY);
-    frontRightModuleLocation = new Translation2d(-originDistanceX, originDistanceY);
-    backLeftModuleLocation = new Translation2d(originDistanceX, -originDistanceY);
-    backRightModuleLocation = new Translation2d(-originDistanceX, -originDistanceY);
+    frontLeftModuleLocation = new Translation2d(Constants.drivetrainModuleOffset, Constants.drivetrainModuleOffset);
+    frontRightModuleLocation = new Translation2d(-Constants.drivetrainModuleOffset, Constants.drivetrainModuleOffset);
+    backLeftModuleLocation = new Translation2d(Constants.drivetrainModuleOffset, -Constants.drivetrainModuleOffset);
+    backRightModuleLocation = new Translation2d(-Constants.drivetrainModuleOffset, -Constants.drivetrainModuleOffset);
 
     /* Creates one swerve module state for each module (4) */
     /* The array order (of moduleStates) corresponds to the order of modules in moduleDistances */
     /* This is also the same order you recieve module states from inverse kinematics */
     moduleDistances = new SwerveDriveKinematics(frontLeftModuleLocation, frontRightModuleLocation, backLeftModuleLocation, backRightModuleLocation);
-    moduleStates = new SwerveModuleState[4];
+    moduleStates = new SwerveModuleState[Constants.numberOfModules];
 
 
     /* Create swerve module objects using the SwerveModule subsystem */
-    frontLeftModule = new SwerveModule(3, 4, 1);
+    frontLeftModule = new SwerveModule(Constants.frontLeftTurnID, Constants.frontLeftDriveID, Constants.frontLeftEncoderPort);
     frontRightModule = new SwerveModule(1, 2, 0);
     backLeftModule = new SwerveModule(5, 6, 2);
     backRightModule = new SwerveModule(7, 8, 3);
@@ -73,7 +70,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   /* Also includes angle optimization, for example: turning the module -90 degrees instead of going 270 degrees */
   public void periodicModuleUpdate(double forward, double strafe, double yaw) {
     drivetrainSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds
-    (strafe * driveSpeedMultiplier, forward * driveSpeedMultiplier, yaw * radiansPerSecondMultiplier, Rotation2d.fromDegrees(-gyro.getAngle()));
+    (strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getAngle()));
 
     moduleStates = moduleDistances.toSwerveModuleStates(drivetrainSpeeds);
 
