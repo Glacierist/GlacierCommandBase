@@ -4,21 +4,23 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.AutoAimYaw;
+import frc.robot.subsystems.SwerveInput;
 
-public class AutoAimYaw extends CommandBase {
-  /** Creates a new AutoAimYaw. */
-  private Limelight limelight;
-  private PIDController turnController;
-
-  public AutoAimYaw() {
+public class DriveLogicCommand extends CommandBase {
+  private XboxController swerveController;
+  private SwerveInput swerveInput;
+  private AutoAimYaw autoAimYaw;
+  
+  /** Creates a new JoystickDriveCommand. */
+  public DriveLogicCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
-    limelight = RobotContainer.limelight;
-    turnController = new PIDController(1.5, 0, 0.8);
-
+    swerveController = RobotContainer.swerveController;
+    swerveInput = RobotContainer.swerveInput;
+    autoAimYaw = RobotContainer.autoAimYaw;
   }
 
   // Called when the command is initially scheduled.
@@ -28,8 +30,11 @@ public class AutoAimYaw extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limelight.getXCrosshairOffset() > 1) {
-      RobotContainer.swerveDrive.periodicModuleUpdate(0, 0, turnController.calculate(0,0));
+    if (RobotContainer.swerveController.getBackButton() == false) {
+      swerveInput.SwerveJoystick();
+    }
+    else {
+      RobotContainer.autoAimYaw.TrackTarget();
     }
   }
 

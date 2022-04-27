@@ -7,11 +7,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.Limelight;
+import frc.robot.commands.DriveLogicCommand;
+import frc.robot.subsystems.AutoAimYaw;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.SwerveInput;
+import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.SwerveModule;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,27 +26,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain();
-
-  // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final DriveCommand driveCommand = new DriveCommand(swerveDrivetrain);
   private final AutonomousCommand autoCommand = new AutonomousCommand();
 
   public static SwerveDrivetrain swerveDrive;
   public static XboxController swerveController;
   public static XboxController alternateController;
   public static Limelight limelight;
+  public static SwerveInput swerveInput;
+  public static Gyroscope gyro;
+  public static AutoAimYaw autoAimYaw;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
     swerveDrive = new SwerveDrivetrain();
-    limelight = new Limelight();
     swerveController = new XboxController(Constants.swerveControllerPort);
     alternateController = new XboxController(Constants.alternateControllerPort);
-
-
+    limelight = new Limelight();
+    swerveInput = new SwerveInput();
+    gyro = new Gyroscope(90);
+    autoAimYaw = new AutoAimYaw();
   }
 
   /**
@@ -52,7 +57,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    new JoystickButton(swerveController, XboxController.Button.kStart.value).toggleWhenPressed(new DriveLogicCommand());
   }
 
   /**

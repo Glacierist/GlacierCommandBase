@@ -13,10 +13,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.SwerveModule;
 import edu.wpi.first.wpilibj.SPI;
 
 public class SwerveDrivetrain extends SubsystemBase {
-  /** Creates a new SwerveDrivetrain. */
+  /* Creates a new SwerveDrivetrain. */
+  
   private SwerveModule frontLeftModule;
   private SwerveModule frontRightModule;
   private SwerveModule backLeftModule;
@@ -31,10 +35,11 @@ public class SwerveDrivetrain extends SubsystemBase {
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics moduleDistances;
 
-  private AHRS gyro;
+  private Gyroscope gyro;
 
   public SwerveDrivetrain() {
     // Use addRequirements() here to declare subsystem dependencies.
+    gyro = RobotContainer.gyro;
     
     /* Let the code know where the modules are in relation to the origin of the robot */
     frontLeftModuleLocation = new Translation2d(Constants.drivetrainModuleOffset, Constants.drivetrainModuleOffset);
@@ -54,31 +59,21 @@ public class SwerveDrivetrain extends SubsystemBase {
     frontRightModule = new SwerveModule(1, 2, 0);
     backLeftModule = new SwerveModule(5, 6, 2);
     backRightModule = new SwerveModule(7, 8, 3);
-
-    /* Create a gyro */
-    try {
-      gyro = new AHRS(SPI.Port.kMXP); 
-      gyro.reset();
-    } catch (RuntimeException ex) {
-        System.out.println("--------------");
-        System.out.println("NavX not plugged in");
-        System.out.println("--------------");
-    } 
   }
 
   /* Converts forward, strafe, and yaw inputs (all from -1 to 1) to module angles and drive velocities */
   /* Also includes angle optimization, for example: turning the module -90 degrees instead of going 270 degrees */
   public void periodicModuleUpdate(double forward, double strafe, double yaw) {
     drivetrainSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds
-    (strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getAngle()));
+    (strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getTotalAngle()));
 
     moduleStates = moduleDistances.toSwerveModuleStates(drivetrainSpeeds);
 
     /* With module angle optimization */
-    var frontLeftOptimized = SwerveModuleState.optimize(moduleStates[0], frontLeftModule.getCurrentAngle());
-    var frontRightOptimized = SwerveModuleState.optimize(moduleStates[1], frontRightModule.getCurrentAngle());
-    var backLeftOptimized = SwerveModuleState.optimize(moduleStates[2], backLeftModule.getCurrentAngle());
-    var backRightOptimized = SwerveModuleState.optimize(moduleStates[3], backRightModule.getCurrentAngle());
+    var frontLeftOptimized = SwerveModuleState.optimize(moduleStates[0], frontLeftModule.get180Angle());
+    var frontRightOptimized = SwerveModuleState.optimize(moduleStates[1], frontRightModule.get180Angle());
+    var backLeftOptimized = SwerveModuleState.optimize(moduleStates[2], backLeftModule.get180Angle());
+    var backRightOptimized = SwerveModuleState.optimize(moduleStates[3], backRightModule.get180Angle());
     
     frontLeftModule.setModule(frontLeftOptimized.angle, frontLeftOptimized.speedMetersPerSecond);
     frontRightModule.setModule(frontRightOptimized.angle, frontRightOptimized.speedMetersPerSecond);

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.basicSubsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -37,7 +37,7 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public double getDistance() {
+  public double getTargetDistance() {
     return (Constants.hubHeight - Constants.limelightHeight) / Math.tan(Math.toRadians(Constants.limelightAngle + getYCrosshairOffset()));
   }
   

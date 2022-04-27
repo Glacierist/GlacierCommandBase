@@ -33,12 +33,8 @@ public final class Constants {
     public static final int backLeftEncoderPort = 2;
     public static final int backRightEncoderPort = 3;
 
-    public static final double driveEncoderVelocityConversion = (1/5.3333) * (0.106 * 3.14) * (1/60);
+    public static final double driveEncoderVelocityConversion = (1/5.3333) * (0.106 * Math.PI) * (1/60);
     public static final double turnEncoderPositionConversion = 360 * (1/11.6571);
-
-    public static final ProfiledPIDController turnPIDController = new ProfiledPIDController(0.00, 0.00, 0.00, new TrapezoidProfile.Constraints(5, 8));
-    public static final ProfiledPIDController drivePIDController = new ProfiledPIDController(0.00, 0.00, 0.00, new TrapezoidProfile.Constraints(10, 20));
-    public static final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(0.55493, 2.3014, 0.51488);
 
     public static final double drivetrainModuleOffset = 0.2923;
     public static final int numberOfModules = 4;
@@ -49,10 +45,14 @@ public final class Constants {
     public static final int swerveControllerPort = 0;
     public static final int alternateControllerPort = 1;
 
-    /* - - - SHOOTER CONSTANTS - - - */
+    /* - - - FLYWHEEL CONSTANTS - - - */
+    public static final int leftFlywheelID = 4;
+    public static final int rightFlywheelID = 5;
+    public static final double RPMtoFlywheelTipSpeed = (6 * Math.PI) / 2362;
+
+    /* - - - HOOD CONSTANTS - - - */
     public static final int hoodMotorID = 11;
-    public static final int flywheelLeftID = 4;
-    public static final int flywheelRightID = 5;
+    public static final double motorToHoodConversion = 360 * (16/32) * (10/203);
 
     /* - - - INDEXER CONSTANTS - - - */
     public static final int outerIndexerID = 15;
