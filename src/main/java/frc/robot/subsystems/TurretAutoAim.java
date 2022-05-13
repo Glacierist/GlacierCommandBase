@@ -35,7 +35,7 @@ public class TurretAutoAim extends SubsystemBase {
   }
 
   public void aimYaw() {
-    swerveInput.SwerveYawInput(yawPIDController.calculate(limelight.getXCrosshairOffset(), aimCalculator.turretYawAngle()));
+    swerveInput.SwerveYawInput(limelight.getXCrosshairOffset(), aimCalculator.turretYawAngle());
   }
 
   @Override

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,32 +15,64 @@ import frc.robot.RobotContainer;
 public class SwerveInput extends SubsystemBase {
   private XboxController swerveController;
   private SwerveDrivetrain swerveDrive;
+  private PIDController forwardPIDController;
+  private PIDController strafePIDController;
+  private PIDController yawPIDController;
+  private SimpleMotorFeedforward forwardFeedforward;
+  private SimpleMotorFeedforward strafeFeedforward;
+  private SimpleMotorFeedforward yawFeedforward;
+
+  private int controllerSwitcher;
 
   /** Creates a new SwerveInput. */
   public SwerveInput() {
     swerveController = RobotContainer.swerveController;
     swerveDrive = RobotContainer.swerveDrive;
+
+    /* 0: Taranis QX7, 1: Xbox */
+    controllerSwitcher = 0;
+
+    forwardPIDController = new PIDController(0, 0, 0);
+    strafePIDController = new PIDController(0, 0, 0);
+    yawPIDController = new PIDController(0, 0, 0);
+
+    forwardFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+    strafeFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+    yawFeedforward = new SimpleMotorFeedforward(0, 0, 0);
   }
 
   public void SwerveJoystick() {
-    if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05 || Math.abs(swerveController.getRawAxis(2)) > 0.05) {
-      swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(2) * Constants.radiansPerSecondMultiplier);
-    // }
-
-    // if (Math.abs(swerveController.getRightY()) > 0.05 || Math.abs(swerveController.getRightX()) > 0.05 || Math.abs(swerveController.getLeftX()) > 0.05) {
-    //   swerveDrive.periodicModuleUpdate(swerveController.getRightY() * Constants.maxVelocityMultiplier, swerveController.getRightX() * Constants.maxVelocityMultiplier, swerveController.getLeftX() * Constants.radiansPerSecondMultiplier);
+    if (controllerSwitcher == 0) {
+      /* Taranis QX7 Controller Settings */
+      if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05 || Math.abs(swerveController.getRawAxis(2)) > 0.05) {
+        swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(2) * Constants.radiansPerSecondMultiplier);
+      }
+    }
+    else if (controllerSwitcher == 1) {
+      /* Xbox Controller Settings */
+      if (Math.abs(swerveController.getRightY()) > 0.05 || Math.abs(swerveController.getRightX()) > 0.05 || Math.abs(swerveController.getLeftX()) > 0.05) {
+        swerveDrive.periodicModuleUpdate(swerveController.getRightY() * Constants.maxVelocityMultiplier, swerveController.getRightX() * Constants.maxVelocityMultiplier, swerveController.getLeftX() * Constants.radiansPerSecondMultiplier);
+      }
+    }
+    else {
+      controllerSwitcher = 0;
     }
   }
 
-  public void SwerveYawInput(double yawInput) {
+  public void SwerveYawInput(double yawMeasurement, double yawSetpoint) {
+    double yawPID = yawPIDController.calculate(yawMeasurement, yawSetpoint);
     if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05) {
-      SmartDashboard.putNumber("Swerve Input Yaw", yawInput);
-      swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, yawInput * Constants.radiansPerSecondMultiplier);
+      SmartDashboard.putNumber("Swerve Input Yaw", yawPID);
+      swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, yawPID * Constants.radiansPerSecondMultiplier);
     }
   }
 
-  public void SwerveAllInput(double forward, double strafe, double yaw) {
-    swerveDrive.periodicModuleUpdate(forward * Constants.maxVelocityMultiplier, strafe * Constants.maxVelocityMultiplier, yaw * Constants.radiansPerSecondMultiplier);
+  public void SwerveAllInput(double forwardMeasurement, double forwardSetpoint, double strafeMeasurement, double strafeSetpoint, double yawMeasurement, double yawSetpoint) {
+    double forwardPID = forwardPIDController.calculate(forwardMeasurement, forwardSetpoint);
+    double strafePID = strafePIDController.calculate(strafeMeasurement, strafeSetpoint);
+    double yawPID = yawPIDController.calculate(yawMeasurement, yawSetpoint);
+
+    swerveDrive.periodicModuleUpdate(forwardPID * Constants.maxVelocityMultiplier, strafePID * Constants.maxVelocityMultiplier, yawPID * Constants.radiansPerSecondMultiplier);
   }
 
   @Override

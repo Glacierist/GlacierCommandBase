@@ -39,19 +39,21 @@ public class Gyro extends SubsystemBase {
 
   /* Returns the total angle (goes past 360) */
   /* ANGLE ADJUSTMENT DOES EFFECT THIS VALUE */
-  public double getTotalAngle() {
+  public double getTotalAngleDegrees() {
     return gyro.getAngle();
   }
 
   /* Returns an angle from -180 to 180 */
   /* ANGLE ADJUSTMENT DOES NOT EFFECT THIS VALUE */
-  public double get180Angle() {
+  /* Can use gyro.zeroYaw() to offset the value */
+  public double get180AngleDegrees() {
     return gyro.getYaw();
   }
   
   /* Resets gyro angle*/
   public void resetGyroYaw() {
     gyro.reset();
+    gyro.zeroYaw();
   }
 
   /* Calibrates the gyro */

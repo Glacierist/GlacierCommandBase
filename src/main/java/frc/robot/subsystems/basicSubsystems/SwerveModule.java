@@ -50,13 +50,13 @@ public class SwerveModule extends SubsystemBase {
   /* Sets a swerve module to a given angle in degrees and speed in m/s */
   public void setModule(Rotation2d angle, double speed) {
     /* PID controller and motion profile to turn the swerve module to a givien angle (degrees) */
-    turnMotor.set(MathUtil.clamp(turnPIDController.calculate(get180Angle().getDegrees(), angle.getDegrees()), -0.4, 0.4));
+    turnMotor.set(MathUtil.clamp(turnPIDController.calculate(getTurn180Angle(), angle.getDegrees()), -0.4, 0.4));
 
     /* Feed Forward controller + PID controller: Uses system dynamics and PID to get a more responsive drivetrain */
     driveMotor.setVoltage(driveFeedforward.calculate(driveEncoder.getVelocity(), speed, 0.2) + drivePIDController.calculate(driveEncoder.getVelocity(), speed));
   }
 
-  public Rotation2d get180Angle() {
+  public double getTurn180Angle() {
     if (turnEncoder.getPosition() > 360) {
       turnEncoder180 = (turnEncoder.getPosition() % 360) - 180;
     }
@@ -66,8 +66,13 @@ public class SwerveModule extends SubsystemBase {
     else {
       turnEncoder180 = turnEncoder.getPosition() - 180;
     }
-    return Rotation2d.fromDegrees(turnEncoder180);
+    return turnEncoder180;
   }
+
+  public Rotation2d getTurn180Angle2d() {
+    return Rotation2d.fromDegrees(getTurn180Angle());
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
