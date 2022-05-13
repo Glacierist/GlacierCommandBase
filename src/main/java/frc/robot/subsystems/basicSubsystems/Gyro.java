@@ -6,19 +6,19 @@ package frc.robot.subsystems.basicSubsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 
-public class Gyroscope extends SubsystemBase {
+public class Gyro extends SubsystemBase {
   private AHRS gyro;
   private Limelight limelight;
   private SwerveDrivetrain swerveDrive;
 
   /** Creates a new Gyro. */
-  public Gyroscope(double offset) {
+  public Gyro(double offset) {
 
     limelight = RobotContainer.limelight;
     swerveDrive = RobotContainer.swerveDrive;
@@ -80,21 +80,25 @@ public class Gyroscope extends SubsystemBase {
 
   public double getVelocityY() {
     double velocityY = -gyro.getVelocityX();
+    SmartDashboard.putNumber("Gyro Velocity Y", velocityY);
     return velocityY;
   }
 
   public double getVelocityX() {
     double velocityX = gyro.getVelocityY();
+    SmartDashboard.putNumber("Gyro Velocity X", velocityX);
     return velocityX;
   }
 
   public double getAveragedVelocityY() {
     double averagedVelocityY = (getVelocityX() + swerveDrive.chassisYVelocity()) / 2;
+    SmartDashboard.putNumber("Averaged Velocity Y", averagedVelocityY);
     return averagedVelocityY;
   }
 
   public double getAveragedVelocityX() {
     double averagedVelocityX = (getVelocityY() - swerveDrive.chassisXVelocity()) / 2;
+    SmartDashboard.putNumber("Averaged Velocity X", averagedVelocityX);
     return averagedVelocityX;
   }
 
@@ -103,24 +107,21 @@ public class Gyroscope extends SubsystemBase {
   // double gyroStrafe = (remote.getRightY()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle())) - (remote.getRightX()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle()));
   // double gyroForward = (remote.getRightY()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle())) + (remote.getRightX()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle()));
   public double getHubRelativeVelocityX() {
-    double gyroXVelocity = (getAveragedVelocityY()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset())) - (getAveragedVelocityX()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset()));
-
-    System.out.println("Chassis X Velocity: " + gyroXVelocity);
-
-    return gyroXVelocity;
+    double hubRelativeVelocityX = (getAveragedVelocityY()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset())) - (getAveragedVelocityX()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset()));
+    SmartDashboard.putNumber("Hub Relative Velocity X", hubRelativeVelocityX);
+    return hubRelativeVelocityX;
   }
 
   public double getHubRelativeVelocityY() {
-    double gyroYVelocity = (getAveragedVelocityY()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset())) + (getAveragedVelocityX()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset()));
-
-    System.out.println("Chassis Y Velocity: " + gyroYVelocity);
-
-    return gyroYVelocity;
+    double hubRelativeVelocityY = (getAveragedVelocityY()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset())) + (getAveragedVelocityX()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset()));
+    SmartDashboard.putNumber("Hub Relative Velocity Y", hubRelativeVelocityY);
+    return hubRelativeVelocityY;
   }
 
   public double getHubRelativeVelocity() {
-    double gyroVelocity = Math.sqrt(Math.pow(getHubRelativeVelocityX(), 2) + Math.pow(getHubRelativeVelocityY(), 2));
-    return gyroVelocity;
+    double hubRelativeVelocity = Math.sqrt(Math.pow(getHubRelativeVelocityX(), 2) + Math.pow(getHubRelativeVelocityY(), 2));
+    SmartDashboard.putNumber("Hub Relative Velocity", hubRelativeVelocity);
+    return hubRelativeVelocity;
   }
 
   @Override

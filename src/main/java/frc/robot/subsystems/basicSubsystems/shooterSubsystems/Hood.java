@@ -36,7 +36,7 @@ public class Hood extends SubsystemBase {
     hoodMotor.setVoltage(hoodFeedforwardController.calculate(angle, 0) + hoodPIDController.calculate(hoodEncoder.getPosition(), angle));
   }
 
-  public void homeHood() {
+  public void home() {
     hoodMotor.setVoltage(4);
     if ((hoodEncoder.getVelocity() < 5) && hoodMotor.getOutputCurrent() > 1) {
       hoodMotor.setVoltage(0);

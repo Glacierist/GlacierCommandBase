@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -31,12 +32,13 @@ public class SwerveInput extends SubsystemBase {
 
   public void SwerveYawInput(double yawInput) {
     if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05) {
+      SmartDashboard.putNumber("Swerve Input Yaw", yawInput);
       swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, yawInput * Constants.radiansPerSecondMultiplier);
     }
   }
 
   public void SwerveAllInput(double forward, double strafe, double yaw) {
-      swerveDrive.periodicModuleUpdate(forward * Constants.maxVelocityMultiplier, strafe * Constants.maxVelocityMultiplier, yaw * Constants.radiansPerSecondMultiplier);
+    swerveDrive.periodicModuleUpdate(forward * Constants.maxVelocityMultiplier, strafe * Constants.maxVelocityMultiplier, yaw * Constants.radiansPerSecondMultiplier);
   }
 
   @Override

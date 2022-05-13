@@ -4,18 +4,19 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.Gyro;
 import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 
-public class MovingAimCalculator extends SubsystemBase {
-  public Gyroscope gyro;
+public class AimCalculator extends SubsystemBase {
+  public Gyro gyro;
   public Limelight limelight;
   
   /** Creates a new MovingAimCalculator. */
-  public MovingAimCalculator() {
+  public AimCalculator() {
     gyro = RobotContainer.gyro;
     limelight = RobotContainer.limelight;
 
@@ -23,12 +24,15 @@ public class MovingAimCalculator extends SubsystemBase {
 
   public double turretYawAngle() {
     double yawAngle = Math.atan2(gyro.getHubRelativeVelocityY(), gyro.getHubRelativeVelocityX());
+    SmartDashboard.putNumber("Turret Yaw Angle", yawAngle);
     return yawAngle;
   }
 
   public double turretHoodAngle() {
     double movingHubDistance = Math.sqrt(Math.pow(limelight.getTargetDistance() + gyro.getHubRelativeVelocityY(), 2) + Math.pow(gyro.getHubRelativeVelocityX(), 2));
     double movingHoodAngle = movingHubDistance * Constants.distanceToHoodAngle;
+    SmartDashboard.putNumber("Turret Hub Distance", movingHubDistance);
+    SmartDashboard.putNumber("Turret Hood Angle", movingHoodAngle);
     return movingHoodAngle;
   }
 

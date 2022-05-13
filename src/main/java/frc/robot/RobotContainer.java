@@ -8,12 +8,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DriveLogicCommand;
-import frc.robot.subsystems.AutoAimHood;
-import frc.robot.subsystems.AutoAimYaw;
-import frc.robot.subsystems.MovingAimCalculator;
+import frc.robot.subsystems.TurretAutoAim;
+import frc.robot.subsystems.AimCalculator;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.SwerveInput;
-import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.Gyro;
 import frc.robot.subsystems.basicSubsystems.SwerveModule;
 import frc.robot.subsystems.basicSubsystems.intakeSubsystems.Pneumatics;
 import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
@@ -38,12 +37,11 @@ public class RobotContainer {
   public static XboxController alternateController;
   public static Limelight limelight;
   public static SwerveInput swerveInput;
-  public static Gyroscope gyro;
-  public static AutoAimYaw autoAimYaw;
-  public static AutoAimHood autoAimHood;
+  public static Gyro gyro;
+  public static TurretAutoAim turretAutoAim;
   public static Hood hood;
-  public static MovingAimCalculator aimCalculator;
-
+  public static AimCalculator aimCalculator;
+  public static Pneumatics pneumatics;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -52,11 +50,11 @@ public class RobotContainer {
     alternateController = new XboxController(Constants.alternateControllerPort);
     limelight = new Limelight();
     swerveInput = new SwerveInput();
-    gyro = new Gyroscope(90);
-    autoAimYaw = new AutoAimYaw();
-    autoAimHood = new AutoAimHood();
+    gyro = new Gyro(90);
+    turretAutoAim = new TurretAutoAim();
     hood = new Hood(8);
-    aimCalculator = new MovingAimCalculator();
+    aimCalculator = new AimCalculator();
+    pneumatics = new Pneumatics();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -69,7 +67,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(swerveController, XboxController.Button.kStart.value).toggleWhenPressed(new DriveLogicCommand());
+    new JoystickButton(swerveController, XboxController.Button.kStart.value).whileActiveContinuous(new DriveLogicCommand());
 
   }
 

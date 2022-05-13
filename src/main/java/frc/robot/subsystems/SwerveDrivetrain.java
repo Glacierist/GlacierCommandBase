@@ -9,10 +9,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.Gyro;
 import frc.robot.subsystems.basicSubsystems.SwerveModule;
 
 public class SwerveDrivetrain extends SubsystemBase {
@@ -32,7 +33,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   private SwerveModuleState[] moduleStates;
   private SwerveDriveKinematics moduleDistances;
 
-  private Gyroscope gyro;
+  private Gyro gyro;
 
 
   public SwerveDrivetrain() {
@@ -63,8 +64,12 @@ public class SwerveDrivetrain extends SubsystemBase {
   /* Converts forward, strafe, and yaw inputs (all from -1 to 1) to module angles and drive velocities */
   /* Also includes angle optimization, for example: turning the module -90 degrees instead of going 270 degrees */
   public void periodicModuleUpdate(double forward, double strafe, double yaw) {
+    SmartDashboard.putNumber("Module Update Forward", forward);
+    SmartDashboard.putNumber("Module Update Strafe", strafe);
+    SmartDashboard.putNumber("Module Update Yaw", yaw);
+
     // drivetrainSpeeds = new ChassisSpeeds(strafe, forward, yaw/*, Rotation2d.fromDegrees(-gyro.getTotalAngle())*/);
-    drivetrainSpeeds.fromFieldRelativeSpeeds(strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getTotalAngle()));
+    drivetrainSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getTotalAngle()));
 
     moduleStates = moduleDistances.toSwerveModuleStates(drivetrainSpeeds);
 

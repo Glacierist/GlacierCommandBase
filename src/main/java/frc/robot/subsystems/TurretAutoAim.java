@@ -4,30 +4,38 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.basicSubsystems.Gyroscope;
 import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
 import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 
-public class AutoAimHood extends SubsystemBase {
+public class TurretAutoAim extends SubsystemBase {
   private Limelight limelight;
+  private SwerveInput swerveInput;
   private Hood hood;
-  private Gyroscope gyro;
-  private MovingAimCalculator aimCalculator;
+  private AimCalculator aimCalculator;
+
+  private PIDController yawPIDController;
 
   /** Creates a new AutoAimHood. */
-  public AutoAimHood() {
+  public TurretAutoAim() {
     limelight = RobotContainer.limelight;
+    swerveInput = RobotContainer.swerveInput;
     hood = RobotContainer.hood;
-    gyro = RobotContainer.gyro;
     aimCalculator = RobotContainer.aimCalculator;
+
+    yawPIDController = new PIDController(1.5, 0, 0.8);
+    yawPIDController.setTolerance(2, 1);
 
   }
 
   public void aimHood() {
     hood.setHoodAngle(aimCalculator.turretHoodAngle());
+  }
+
+  public void aimYaw() {
+    swerveInput.SwerveYawInput(yawPIDController.calculate(limelight.getXCrosshairOffset(), aimCalculator.turretYawAngle()));
   }
 
   @Override
