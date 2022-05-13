@@ -18,8 +18,15 @@ public class Pneumatics extends SubsystemBase {
     pneumaticsHub.enableCompressorDigital();
     solenoid = pneumaticsHub.makeDoubleSolenoid(14, 15);
     solenoid.set(DoubleSolenoid.Value.kForward);
+  }
 
-    pneumaticsHub.disableCompressor();
+  public void setSolenoid(boolean position) {
+    if (position == true) {
+      solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+    else if (position == false) {
+      solenoid.set(DoubleSolenoid.Value.kForward);
+    }
   }
 
   @Override

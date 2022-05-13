@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 // import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -44,16 +45,16 @@ public class Flywheel extends SubsystemBase {
     if (RPM > 5676) {
       RPM = 5676;
     }
-    leftFlywheelMotor.setVoltage(flywheelFeedforwardController.calculate(leftFlywheelEncoder.getVelocity(), RPM / 473, 0.6));
-    rightFlywheelMotor.setVoltage(flywheelFeedforwardController.calculate(rightFlywheelEncoder.getVelocity(), RPM / -473, 0.6));
+    leftFlywheelMotor.setVoltage(MathUtil.clamp(flywheelFeedforwardController.calculate(leftFlywheelEncoder.getVelocity(), RPM / 473, 0.6), -12, 12));
+    rightFlywheelMotor.setVoltage(MathUtil.clamp(flywheelFeedforwardController.calculate(rightFlywheelEncoder.getVelocity(), RPM / -473, 0.6), -12, 12));
   }
 
   public void setFlywheelTipSpeed(double velocity) {
     if (velocity > 45.2935) {
       velocity = 45.2935;
     }
-    leftFlywheelMotor.setVoltage(flywheelFeedforwardController.calculate(leftFlywheelEncoder.getVelocity() * Constants.RPMtoFlywheelTipSpeed, velocity, 0.6));
-    rightFlywheelMotor.setVoltage(flywheelFeedforwardController.calculate(rightFlywheelEncoder.getVelocity() * Constants.RPMtoFlywheelTipSpeed, velocity, 0.6));
+    leftFlywheelMotor.setVoltage(MathUtil.clamp(flywheelFeedforwardController.calculate(leftFlywheelEncoder.getVelocity() * Constants.RPMtoFlywheelTipSpeed, velocity, 0.6), -12, 12));
+    rightFlywheelMotor.setVoltage(MathUtil.clamp(flywheelFeedforwardController.calculate(rightFlywheelEncoder.getVelocity() * Constants.RPMtoFlywheelTipSpeed, velocity, 0.6), -12, 12));
   }
 
   public double getAvgFlywheelRPM() {

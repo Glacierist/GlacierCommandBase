@@ -53,7 +53,7 @@ public class SwerveModule extends SubsystemBase {
     turnMotor.set(MathUtil.clamp(turnPIDController.calculate(getTurn180Angle(), angle.getDegrees()), -0.4, 0.4));
 
     /* Feed Forward controller + PID controller: Uses system dynamics and PID to get a more responsive drivetrain */
-    driveMotor.setVoltage(driveFeedforward.calculate(driveEncoder.getVelocity(), speed, 0.2) + drivePIDController.calculate(driveEncoder.getVelocity(), speed));
+    driveMotor.setVoltage(MathUtil.clamp(driveFeedforward.calculate(driveEncoder.getVelocity(), speed, 0.5) + drivePIDController.calculate(driveEncoder.getVelocity(), speed), -12, 12));
   }
 
   public double getTurn180Angle() {

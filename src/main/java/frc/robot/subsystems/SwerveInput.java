@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import edu.wpi.first.math.MathUtil;
 
 public class SwerveInput extends SubsystemBase {
   private XboxController swerveController;
@@ -18,9 +19,6 @@ public class SwerveInput extends SubsystemBase {
   private PIDController forwardPIDController;
   private PIDController strafePIDController;
   private PIDController yawPIDController;
-  private SimpleMotorFeedforward forwardFeedforward;
-  private SimpleMotorFeedforward strafeFeedforward;
-  private SimpleMotorFeedforward yawFeedforward;
 
   private int controllerSwitcher;
 
@@ -35,10 +33,6 @@ public class SwerveInput extends SubsystemBase {
     forwardPIDController = new PIDController(0, 0, 0);
     strafePIDController = new PIDController(0, 0, 0);
     yawPIDController = new PIDController(0, 0, 0);
-
-    forwardFeedforward = new SimpleMotorFeedforward(0, 0, 0);
-    strafeFeedforward = new SimpleMotorFeedforward(0, 0, 0);
-    yawFeedforward = new SimpleMotorFeedforward(0, 0, 0);
   }
 
   public void SwerveJoystick() {
@@ -60,7 +54,7 @@ public class SwerveInput extends SubsystemBase {
   }
 
   public void SwerveYawInput(double yawMeasurement, double yawSetpoint) {
-    double yawPID = yawPIDController.calculate(yawMeasurement, yawSetpoint);
+    double yawPID = MathUtil.clamp(yawPIDController.calculate(yawMeasurement, yawSetpoint), -1, 1);
     if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05) {
       SmartDashboard.putNumber("Swerve Input Yaw", yawPID);
       swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, yawPID * Constants.radiansPerSecondMultiplier);
@@ -68,9 +62,9 @@ public class SwerveInput extends SubsystemBase {
   }
 
   public void SwerveAllInput(double forwardMeasurement, double forwardSetpoint, double strafeMeasurement, double strafeSetpoint, double yawMeasurement, double yawSetpoint) {
-    double forwardPID = forwardPIDController.calculate(forwardMeasurement, forwardSetpoint);
-    double strafePID = strafePIDController.calculate(strafeMeasurement, strafeSetpoint);
-    double yawPID = yawPIDController.calculate(yawMeasurement, yawSetpoint);
+    double forwardPID = MathUtil.clamp(forwardPIDController.calculate(forwardMeasurement, forwardSetpoint), -1, 1);
+    double strafePID = MathUtil.clamp(strafePIDController.calculate(strafeMeasurement, strafeSetpoint), -1, 1);
+    double yawPID = MathUtil.clamp(yawPIDController.calculate(yawMeasurement, yawSetpoint), -1, 1);
 
     swerveDrive.periodicModuleUpdate(forwardPID * Constants.maxVelocityMultiplier, strafePID * Constants.maxVelocityMultiplier, yawPID * Constants.radiansPerSecondMultiplier);
   }
