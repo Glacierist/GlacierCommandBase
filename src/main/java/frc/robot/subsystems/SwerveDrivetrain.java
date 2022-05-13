@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -16,7 +14,6 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.basicSubsystems.Gyroscope;
 import frc.robot.subsystems.basicSubsystems.SwerveModule;
-import edu.wpi.first.wpilibj.SPI;
 
 public class SwerveDrivetrain extends SubsystemBase {
   /* Creates a new SwerveDrivetrain. */
@@ -37,9 +34,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   private Gyroscope gyro;
 
+
   public SwerveDrivetrain() {
     // Use addRequirements() here to declare subsystem dependencies.
-    gyro = RobotContainer.gyro;
     
     /* Let the code know where the modules are in relation to the origin of the robot */
     frontLeftModuleLocation = new Translation2d(Constants.drivetrainModuleOffset, Constants.drivetrainModuleOffset);
@@ -59,13 +56,15 @@ public class SwerveDrivetrain extends SubsystemBase {
     frontRightModule = new SwerveModule(1, 2, 0);
     backLeftModule = new SwerveModule(5, 6, 2);
     backRightModule = new SwerveModule(7, 8, 3);
+
+    gyro = RobotContainer.gyro;
   }
 
   /* Converts forward, strafe, and yaw inputs (all from -1 to 1) to module angles and drive velocities */
   /* Also includes angle optimization, for example: turning the module -90 degrees instead of going 270 degrees */
   public void periodicModuleUpdate(double forward, double strafe, double yaw) {
-    drivetrainSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds
-    (strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getTotalAngle()));
+    // drivetrainSpeeds = new ChassisSpeeds(strafe, forward, yaw/*, Rotation2d.fromDegrees(-gyro.getTotalAngle())*/);
+    drivetrainSpeeds.fromFieldRelativeSpeeds(strafe, forward, yaw, Rotation2d.fromDegrees(-gyro.getTotalAngle()));
 
     moduleStates = moduleDistances.toSwerveModuleStates(drivetrainSpeeds);
 
@@ -85,5 +84,13 @@ public class SwerveDrivetrain extends SubsystemBase {
     // frontRightModule.setModule(moduleStates[1].angle, moduleStates[1].speedMetersPerSecond);
     // backLeftModule.setModule(moduleStates[2].angle, moduleStates[2].speedMetersPerSecond);
     // backRightModule.setModule(moduleStates[3].angle, moduleStates[3].speedMetersPerSecond);
+  }
+
+  public double chassisXVelocity() {
+    return drivetrainSpeeds.vxMetersPerSecond;
+  }
+
+  public double chassisYVelocity() {
+    return drivetrainSpeeds.vyMetersPerSecond;
   }
 }

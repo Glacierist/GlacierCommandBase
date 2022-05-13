@@ -8,12 +8,16 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DriveLogicCommand;
+import frc.robot.subsystems.AutoAimHood;
 import frc.robot.subsystems.AutoAimYaw;
+import frc.robot.subsystems.MovingAimCalculator;
 import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.SwerveInput;
 import frc.robot.subsystems.basicSubsystems.Gyroscope;
-import frc.robot.subsystems.basicSubsystems.Limelight;
 import frc.robot.subsystems.basicSubsystems.SwerveModule;
+import frc.robot.subsystems.basicSubsystems.intakeSubsystems.Pneumatics;
+import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
+import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -28,6 +32,7 @@ public class RobotContainer {
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final AutonomousCommand autoCommand = new AutonomousCommand();
 
+  public static SwerveModule swerveModule;
   public static SwerveDrivetrain swerveDrive;
   public static XboxController swerveController;
   public static XboxController alternateController;
@@ -35,11 +40,12 @@ public class RobotContainer {
   public static SwerveInput swerveInput;
   public static Gyroscope gyro;
   public static AutoAimYaw autoAimYaw;
+  public static AutoAimHood autoAimHood;
+  public static Hood hood;
+  public static MovingAimCalculator aimCalculator;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
 
     swerveDrive = new SwerveDrivetrain();
     swerveController = new XboxController(Constants.swerveControllerPort);
@@ -48,6 +54,12 @@ public class RobotContainer {
     swerveInput = new SwerveInput();
     gyro = new Gyroscope(90);
     autoAimYaw = new AutoAimYaw();
+    autoAimHood = new AutoAimHood();
+    hood = new Hood(8);
+    aimCalculator = new MovingAimCalculator();
+
+    // Configure the button bindings
+    configureButtonBindings();
   }
 
   /**
@@ -58,6 +70,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(swerveController, XboxController.Button.kStart.value).toggleWhenPressed(new DriveLogicCommand());
+
   }
 
   /**

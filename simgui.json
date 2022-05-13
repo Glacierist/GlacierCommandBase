@@ -1,5 +1,12 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [3]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
     "RoboRIO": {
       "window": {
         "visible": true
@@ -9,11 +16,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/AutoAimHood": "Subsystem",
+      "/LiveWindow/AutoAimYaw": "Subsystem",
       "/LiveWindow/Gyroscope": "Subsystem",
+      "/LiveWindow/Hood": "Subsystem",
       "/LiveWindow/Limelight": "Subsystem",
       "/LiveWindow/SwerveDrivetrain": "Subsystem",
       "/LiveWindow/SwerveInput": "Subsystem",
       "/LiveWindow/SwerveModule": "Subsystem",
+      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
@@ -22,6 +33,7 @@
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro"
     }

@@ -5,20 +5,30 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.basicSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.Gyroscope;
+import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
+import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 
 public class AutoAimHood extends SubsystemBase {
   private Limelight limelight;
+  private Hood hood;
+  private Gyroscope gyro;
+  private MovingAimCalculator aimCalculator;
 
   /** Creates a new AutoAimHood. */
   public AutoAimHood() {
     limelight = RobotContainer.limelight;
+    hood = RobotContainer.hood;
+    gyro = RobotContainer.gyro;
+    aimCalculator = RobotContainer.aimCalculator;
 
   }
 
-  
-  
+  public void aimHood() {
+    hood.setHoodAngle(aimCalculator.turretHoodAngle());
+  }
 
   @Override
   public void periodic() {

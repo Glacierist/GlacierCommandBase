@@ -8,12 +8,20 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.SwerveDrivetrain;
+import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
 
 public class Gyroscope extends SubsystemBase {
   private AHRS gyro;
+  private Limelight limelight;
+  private SwerveDrivetrain swerveDrive;
 
   /** Creates a new Gyro. */
   public Gyroscope(double offset) {
+
+    limelight = RobotContainer.limelight;
+    swerveDrive = RobotContainer.swerveDrive;
     
     /* Create a gyro */
     try {
@@ -52,6 +60,15 @@ public class Gyroscope extends SubsystemBase {
     gyro.calibrate();
     System.out.println("- - - DO NOT MOVE ROBOT - - -");
   }
+
+  public boolean isCalibrating() {
+    if (gyro.isCalibrating() == true) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   
   /* Sets the gyro offset angle */
   /* If the gyro thinks right is forward, then the adjustment should be 90 */
@@ -61,24 +78,49 @@ public class Gyroscope extends SubsystemBase {
     gyro.setAngleAdjustment(adjustment);
   }
 
-  public double getChassisVelocityX() {
-    double chassisVelocityX = gyro.getVelocityY(); /* Because the gyro is 90 degrees from straight */
-    return chassisVelocityX;
+  public double getVelocityY() {
+    double velocityY = -gyro.getVelocityX();
+    return velocityY;
   }
 
-  public double getChassisVelocityY() {
-    double chassisVelocityY = -gyro.getVelocityX(); /* Because the gyro is 90 degrees from straight */
-    return chassisVelocityY;
+  public double getVelocityX() {
+    double velocityX = gyro.getVelocityY();
+    return velocityX;
   }
 
-  public double getChassisVelocity() {
-    double chassisVelocity = Math.sqrt(Math.pow(getChassisVelocityX(), 2) + Math.pow(getChassisVelocityY(), 2));
-    return chassisVelocity;
+  public double getAveragedVelocityY() {
+    double averagedVelocityY = (getVelocityX() + swerveDrive.chassisYVelocity()) / 2;
+    return averagedVelocityY;
   }
 
-  public double getChassisTheta() {
-    double chassisTheta = Math.atan2(getChassisVelocityY(), getChassisVelocityX());
-    return chassisTheta;
+  public double getAveragedVelocityX() {
+    double averagedVelocityX = (getVelocityY() - swerveDrive.chassisXVelocity()) / 2;
+    return averagedVelocityX;
+  }
+
+  /* - - - VELOCITIES RELATIVE TO THE HUB - - - */
+
+  // double gyroStrafe = (remote.getRightY()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle())) - (remote.getRightX()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle()));
+  // double gyroForward = (remote.getRightY()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle())) + (remote.getRightX()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle()));
+  public double getHubRelativeVelocityX() {
+    double gyroXVelocity = (getAveragedVelocityY()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset())) - (getAveragedVelocityX()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset()));
+
+    System.out.println("Chassis X Velocity: " + gyroXVelocity);
+
+    return gyroXVelocity;
+  }
+
+  public double getHubRelativeVelocityY() {
+    double gyroYVelocity = (getAveragedVelocityY()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset())) + (getAveragedVelocityX()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset()));
+
+    System.out.println("Chassis Y Velocity: " + gyroYVelocity);
+
+    return gyroYVelocity;
+  }
+
+  public double getHubRelativeVelocity() {
+    double gyroVelocity = Math.sqrt(Math.pow(getHubRelativeVelocityX(), 2) + Math.pow(getHubRelativeVelocityY(), 2));
+    return gyroVelocity;
   }
 
   @Override

@@ -9,10 +9,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -36,8 +34,8 @@ public class SwerveModule extends SubsystemBase {
     turnEncoder = turnMotor.getEncoder();
     driveEncoder = driveMotor.getEncoder();
 
-    turnPIDController = new PIDController(0.00, 0.00, 0.00);
-    drivePIDController = new PIDController(0.00, 0.00, 0.00);
+    turnPIDController = new PIDController(0.004, 0.00, 0.001);
+    drivePIDController = new PIDController(0.004, 0.00, 0.001);
     driveFeedforward = new SimpleMotorFeedforward(0.55493, 2.3014, 0.51488);
 
     /* Converts number of rotations to the angle of the module in radians */

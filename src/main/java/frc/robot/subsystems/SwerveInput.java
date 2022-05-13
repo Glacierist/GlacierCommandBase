@@ -22,6 +22,10 @@ public class SwerveInput extends SubsystemBase {
   public void SwerveJoystick() {
     if (Math.abs(swerveController.getRawAxis(0)) > 0.05 || Math.abs(swerveController.getRawAxis(1)) > 0.05 || Math.abs(swerveController.getRawAxis(2)) > 0.05) {
       swerveDrive.periodicModuleUpdate(swerveController.getRawAxis(0) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(1) * Constants.maxVelocityMultiplier, swerveController.getRawAxis(2) * Constants.radiansPerSecondMultiplier);
+    // }
+
+    // if (Math.abs(swerveController.getRightY()) > 0.05 || Math.abs(swerveController.getRightX()) > 0.05 || Math.abs(swerveController.getLeftX()) > 0.05) {
+    //   swerveDrive.periodicModuleUpdate(swerveController.getRightY() * Constants.maxVelocityMultiplier, swerveController.getRightX() * Constants.maxVelocityMultiplier, swerveController.getLeftX() * Constants.radiansPerSecondMultiplier);
     }
   }
 

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.basicSubsystems;
+package frc.robot.subsystems.basicSubsystems.shooterSubsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -21,7 +21,14 @@ public class Limelight extends SubsystemBase {
   }
 
   public double getXCrosshairOffset() {
-    return table.getEntry("tx").getDouble(0);
+    double xOffset = table.getEntry("tx").getDouble(0);
+    if (xOffset > 26) {
+      System.out.println("Limelight near max angle");
+    }
+    else if (xOffset == 0) {
+      System.out.println("Limelight past max angle");
+    }
+    return xOffset;
   }
 
   public double getYCrosshairOffset() {
@@ -38,7 +45,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public double getTargetDistance() {
-    return (Constants.hubHeight - Constants.limelightHeight) / Math.tan(Math.toRadians(Constants.limelightAngle + getYCrosshairOffset()));
+    double targetDistance = (Constants.hubHeight - Constants.limelightHeight) / Math.tan(Math.toRadians(Constants.limelightAngle + getYCrosshairOffset()));
+    return targetDistance;
   }
   
   @Override

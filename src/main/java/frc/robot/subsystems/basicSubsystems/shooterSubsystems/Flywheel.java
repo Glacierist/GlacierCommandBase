@@ -2,15 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.basicSubsystems;
+package frc.robot.subsystems.basicSubsystems.shooterSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+// import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+// import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -21,7 +21,7 @@ public class Flywheel extends SubsystemBase {
   private RelativeEncoder leftFlywheelEncoder;
   private RelativeEncoder rightFlywheelEncoder;
 
-  private ProfiledPIDController flywheelPIDController;
+  // private ProfiledPIDController flywheelPIDController;
   private SimpleMotorFeedforward flywheelFeedforwardController;
 
   /** Creates a new Flywheel. */
@@ -36,7 +36,7 @@ public class Flywheel extends SubsystemBase {
     leftFlywheelMotor.enableVoltageCompensation(12);
     rightFlywheelMotor.enableVoltageCompensation(12);
 
-    flywheelPIDController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(10, 20));
+    // flywheelPIDController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(10, 20));
     flywheelFeedforwardController = new SimpleMotorFeedforward(0, 0, 0);
   }
 
