@@ -7,8 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.Shooter.Hood;
+import frc.robot.subsystems.basicSubsystems.Shooter.Limelight;
 
 public class TurretAutoAim extends SubsystemBase {
   private Limelight limelight;
@@ -31,7 +31,7 @@ public class TurretAutoAim extends SubsystemBase {
   }
 
   public void aimHood() {
-    hood.setHoodAngle(aimCalculator.turretHoodAngle());
+    hood.setAngle(aimCalculator.turretHoodAngle());
   }
 
   public void aimYaw() {

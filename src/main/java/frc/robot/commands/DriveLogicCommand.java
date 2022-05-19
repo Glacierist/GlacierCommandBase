@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.TurretAutoAim;
+import frc.robot.subsystems.basicSubsystems.Shooter.Hood;
+import frc.robot.subsystems.basicSubsystems.Shooter.Limelight;
 import frc.robot.subsystems.SwerveInput;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
 
 public class DriveLogicCommand extends CommandBase {
   private XboxController swerveController;

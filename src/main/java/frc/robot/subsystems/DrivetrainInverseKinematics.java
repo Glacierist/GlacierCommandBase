@@ -22,10 +22,17 @@ public class DrivetrainInverseKinematics extends SubsystemBase {
   }
 
   public boolean setNextPosition(double positionX, double positionY, double rotation) {
-    while (swerveDrive.getXPose() != positionX || swerveDrive.getYPose() != positionY || -gyro.getTotalAngleDegrees() != rotation) {
+    while (withinRange(swerveDrive.getXPose(), positionX, 0.1) && withinRange(swerveDrive.getYPose(), positionY, 0.1) && withinRange(-gyro.getTotalAngleDegrees(), rotation, 2)) {
       swerveInput.SwerveAllInput(swerveDrive.getYPose(), positionY, swerveDrive.getXPose(), positionX, gyro.getTotalAngleDegrees() % 360, rotation);
     }
     return true;
+  }
+
+  public boolean withinRange(double measurement, double check, double range) {
+    if (measurement > (check - range) && measurement < (check + range)) {
+      return true;
+    }
+    return false;
   }
 
   @Override

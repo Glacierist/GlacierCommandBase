@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.basicSubsystems.shooterSubsystems;
+package frc.robot.subsystems.basicSubsystems.Shooter;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -32,7 +32,7 @@ public class Hood extends SubsystemBase {
     hoodFeedforwardController = new ArmFeedforward(0.1, 0.1, 0.1);
   }
 
-  public void setHoodAngle(double angle) {
+  public void setAngle(double angle) {
     hoodMotor.setVoltage(hoodFeedforwardController.calculate(angle, 0) + hoodPIDController.calculate(hoodEncoder.getPosition(), angle));
   }
 
@@ -42,6 +42,13 @@ public class Hood extends SubsystemBase {
       hoodMotor.setVoltage(0);
       hoodEncoder.setPosition(0);
     }
+  }
+
+  public boolean getRunning() {
+    if (Math.abs(hoodEncoder.getVelocity()) > 0) {
+      return true;
+    }
+    return false;
   }
 
 

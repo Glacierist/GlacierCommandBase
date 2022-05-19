@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.basicSubsystems.Gyro;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.Shooter.Limelight;
 
 public class AimCalculator extends SubsystemBase {
   public Gyro gyro;
@@ -23,7 +23,7 @@ public class AimCalculator extends SubsystemBase {
   }
 
   public double turretYawAngle() {
-    double yawAngle = Math.atan2(gyro.getHubRelativeVelocityY(), gyro.getHubRelativeVelocityX());
+    double yawAngle = Math.atan2(limelight.getTargetDistance() + gyro.getHubRelativeVelocityY(), gyro.getHubRelativeVelocityX());
     SmartDashboard.putNumber("Turret Yaw Angle", yawAngle);
     return yawAngle;
   }

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrivetrain;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.Shooter.Limelight;
 
 public class Gyro extends SubsystemBase {
   private AHRS gyro;
@@ -109,13 +109,13 @@ public class Gyro extends SubsystemBase {
   // double gyroStrafe = (remote.getRightY()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle())) - (remote.getRightX()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle()));
   // double gyroForward = (remote.getRightY()) * Math.cos(Math.toRadians(-swerveDrive.gyro.getAngle())) + (remote.getRightX()) * Math.sin(Math.toRadians(-swerveDrive.gyro.getAngle()));
   public double getHubRelativeVelocityX() {
-    double hubRelativeVelocityX = (getAveragedVelocityY()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset())) - (getAveragedVelocityX()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset()));
+    double hubRelativeVelocityX = (getAveragedVelocityY()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset())) - getAveragedVelocityX() * Math.cos(Math.toRadians(limelight.getXCrosshairOffset()));
     SmartDashboard.putNumber("Hub Relative Velocity X", hubRelativeVelocityX);
     return hubRelativeVelocityX;
   }
 
   public double getHubRelativeVelocityY() {
-    double hubRelativeVelocityY = (getAveragedVelocityY()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset())) + (getAveragedVelocityX()) * Math.sin(Math.toRadians(limelight.getXCrosshairOffset()));
+    double hubRelativeVelocityY = (getAveragedVelocityY()) * Math.cos(Math.toRadians(limelight.getXCrosshairOffset())) + getAveragedVelocityX() * Math.sin(Math.toRadians(limelight.getXCrosshairOffset()));
     SmartDashboard.putNumber("Hub Relative Velocity Y", hubRelativeVelocityY);
     return hubRelativeVelocityY;
   }

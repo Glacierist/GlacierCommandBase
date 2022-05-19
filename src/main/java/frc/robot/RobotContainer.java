@@ -15,9 +15,9 @@ import frc.robot.subsystems.SwerveDrivetrain;
 import frc.robot.subsystems.SwerveInput;
 import frc.robot.subsystems.basicSubsystems.Gyro;
 import frc.robot.subsystems.basicSubsystems.SwerveModule;
-import frc.robot.subsystems.basicSubsystems.intakeSubsystems.Pneumatics;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Hood;
-import frc.robot.subsystems.basicSubsystems.shooterSubsystems.Limelight;
+import frc.robot.subsystems.basicSubsystems.Intake.Pneumatics;
+import frc.robot.subsystems.basicSubsystems.Shooter.Hood;
+import frc.robot.subsystems.basicSubsystems.Shooter.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
