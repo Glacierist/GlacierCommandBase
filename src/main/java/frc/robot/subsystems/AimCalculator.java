@@ -20,7 +20,7 @@ public class AimCalculator extends SubsystemBase {
     gyro = RobotContainer.gyro;
     limelight = RobotContainer.limelight;
 
-  }
+  }   
 
   public double turretYawAngle() {
     double yawAngle = Math.atan2(limelight.getTargetDistance() + gyro.getHubRelativeVelocityY(), gyro.getHubRelativeVelocityX());
